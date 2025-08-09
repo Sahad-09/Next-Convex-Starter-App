@@ -120,3 +120,26 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer utilities {
+  .glass-effect {
+    background: var(--gradient-glass);
+    backdrop-filter: blur(16px);
+    border: 1px solid oklch(1 0 1 / 0.2);
+  }
+  .glass-strong {
+    background: oklch(1 0 1 / 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid oklch(1 0 1 / 0.3);
+  }
+  .jelly-effect {
+    background: linear-gradient(135deg, oklch(0.6 0.2 300 / 0.9), oklch(0.7 0.2 330 / 0.7));
+    backdrop-filter: blur(12px);
+    border: 1px solid oklch(0.6 0.2 300 / 0.3);
+    box-shadow: 0 20px 40px oklch(0.6 0.2 300 / 0.4), 0 0 80px oklch(0.7 0.2 330 / 0.3);
+  }
+  .glass-border {
+    border: 1px solid;
+    border-image: linear-gradient(145deg, oklch(1 0 1 / 0.6), oklch(0.6 0.2 300 / 0.3)) 1;
+  }
+}
