@@ -40,14 +40,14 @@ export async function POST(req: NextRequest) {
     if (!response.ok) {
       const raw = await response.text();
       console.error("[generate-icon] OpenAI image error", response.status, raw);
-      let err: any = {};
+      let err: unknown = {};
       try {
         err = JSON.parse(raw);
       } catch {
         // keep err as {}
       }
       return NextResponse.json(
-        { error: err?.error?.message || `OpenAI request failed (${response.status})` },
+        { error: (err as { error?: { message?: string } })?.error?.message || `OpenAI request failed (${response.status})` },
         { status: 500 }
       );
     }

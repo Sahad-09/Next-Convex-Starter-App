@@ -10,6 +10,7 @@ type WorkflowProps = {
   isGenerating: boolean;
   generatedIcon: string;
   generateIcon: () => void;
+  // showCustomization is temporarily unused while customization is disabled
   showCustomization: boolean;
 };
 
@@ -19,6 +20,7 @@ const Workflow: React.FC<WorkflowProps> = ({
   isGenerating,
   generatedIcon,
   generateIcon,
+  // showCustomization is intentionally unused for now
   showCustomization,
 }) => {
   const handleDownload = async () => {
