@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Sparkles, Wand2, Eye, Star, Download, Heart } from "lucide-react";
-import { JellyCard, JellyButton, Jelly3DIcon } from "@/components/jelly-components";
+import { JellyCard, JellyButton } from "@/components/jelly-components";
 
 type WorkflowProps = {
   uploadedFile: File | null;
@@ -34,7 +34,7 @@ const Workflow: React.FC<WorkflowProps> = ({
       link.click();
       document.body.removeChild(link);
       URL.revokeObjectURL(blobUrl);
-    } catch (error) {
+    } catch {
       // Fallback: open in a new tab if direct download fails (e.g., CORS)
       window.open(generatedIcon, "_blank");
     }

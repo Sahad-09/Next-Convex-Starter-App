@@ -7,6 +7,7 @@ import { FloatingOrb, Jelly3DIcon, JellyButton } from "@/components/jelly-compon
 import Workflow from "@/components/workflow";
 import { Sparkles, Zap, Eye } from "lucide-react";
 import { buildEnhancedPrompt } from "@/utils/logo-3d";
+import { extractPaletteFromFile } from "@/utils/color-palette";
 import { generateJelly3DIcon } from "@/utils/openai-api";
 
 export default function Home() {
@@ -29,6 +30,7 @@ function IndexContent() {
   const [generatedIcon, setGeneratedIcon] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
   const [showCustomization, setShowCustomization] = useState<boolean>(false);
+  const [usePlanner, setUsePlanner] = useState<boolean>(false);
 
   const handleImageUpload = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,8 +49,20 @@ function IndexContent() {
       const description = uploadedFile?.name
         ? `the uploaded asset: ${uploadedFile.name}`
         : "uploaded logo";
-      const prompt = buildEnhancedPrompt(description);
-      const url = await generateJelly3DIcon(prompt);
+      let baseColor: string | undefined;
+      let iconColor: string | undefined;
+      try {
+        const palette = await extractPaletteFromFile(uploadedFile);
+        baseColor = palette.baseColor;
+        iconColor = palette.iconColor;
+      } catch {
+        // If palette extraction fails, fall back silently
+      }
+      const prompt = buildEnhancedPrompt(description, {
+        ...(baseColor ? { baseColor } : {}),
+        ...(iconColor ? { iconColor } : {}),
+      });
+      const url = await generateJelly3DIcon(prompt, { usePlanner });
       setGeneratedIcon(url);
       setShowCustomization(true);
     } catch {
@@ -56,7 +70,7 @@ function IndexContent() {
     } finally {
       setIsGenerating(false);
     }
-  }, [uploadedFile]);
+  }, [uploadedFile, usePlanner]);
 
   return (
     <div
@@ -127,6 +141,21 @@ function IndexContent() {
                 <Eye className="w-5 h-5" />
                 <span>Watch Demo</span>
               </JellyButton>
+            </div>
+          </div>
+
+          <div className="max-w-3xl mx-auto mb-6">
+            <div className="flex items-center justify-center gap-3 text-sm text-gray-300">
+              <label className="inline-flex items-center gap-2 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  className="h-4 w-4 rounded border-white/30 bg-white/10"
+                  checked={usePlanner}
+                  onChange={(e) => setUsePlanner(e.target.checked)}
+                />
+                <span>Use smart planner</span>
+              </label>
+              <span className="text-xs text-gray-400">Refines prompt with a tiny extra LLM call</span>
             </div>
           </div>
 

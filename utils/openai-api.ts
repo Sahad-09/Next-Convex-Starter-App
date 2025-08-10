@@ -5,16 +5,17 @@ export interface OpenAIImageRequest {
   model?: string;
   size?: "1024x1024" | "1792x1024" | "1024x1792";
   quality?: "standard" | "hd";
+  usePlanner?: boolean;
 }
 
 export const generateJelly3DIcon = async (
   prompt: string,
-  opts?: { model?: string; size?: OpenAIImageRequest["size"]; quality?: OpenAIImageRequest["quality"] }
+  opts?: { model?: string; size?: OpenAIImageRequest["size"]; quality?: OpenAIImageRequest["quality"]; usePlanner?: boolean }
 ): Promise<string> => {
   const res = await fetch("/api/generate-icon", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ prompt, model: opts?.model, size: opts?.size, quality: opts?.quality }),
+    body: JSON.stringify({ prompt, model: opts?.model, size: opts?.size, quality: opts?.quality, usePlanner: opts?.usePlanner ?? false }),
   });
   if (!res.ok) {
     const data = await res.json().catch(() => ({}));

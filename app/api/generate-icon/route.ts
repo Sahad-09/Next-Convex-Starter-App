@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { planImagePrompt } from "@/server/ai/prompt-planner";
 
 const OPENAI_URL = "https://api.openai.com/v1/images/generations";
 
@@ -15,10 +16,21 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { prompt, model = "dall-e-3", size = "1024x1024", quality = "standard" } = body ?? {};
+    const { prompt, model = "dall-e-3", size = "1024x1024", quality = "standard", usePlanner = false } = body ?? {};
 
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json({ error: "Invalid prompt" }, { status: 400 });
+    }
+
+    // Optional low-cost planning step to refine the prompt
+    let finalPrompt: string = prompt;
+    if (usePlanner) {
+      try {
+        finalPrompt = await planImagePrompt(prompt);
+      } catch {
+        // fall back silently to base prompt to avoid hard failures
+        finalPrompt = prompt;
+      }
     }
 
     const response = await fetch(OPENAI_URL, {
@@ -27,7 +39,7 @@ export async function POST(req: NextRequest) {
         Authorization: `Bearer ${apiKey}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ model, prompt, size, quality, n: 1 }),
+      body: JSON.stringify({ model, prompt: finalPrompt, size, quality, n: 1 }),
     });
 
     if (!response.ok) {
