@@ -48,13 +48,17 @@ function IndexContent() {
     setIsGenerating(true);
     try {
       const prompt = buildEnhancedPrompt();
-      const url = await generateJelly3DIcon(prompt);
+      const url = await generateJelly3DIcon(prompt, {
+        model: "gpt-image-1",
+        size: "1024x1024",
+        quality: "high",
+      });
       setGeneratedIcon(url);
       // Fire-and-forget save to Convex for user history
       void saveFromUrl({
         prompt,
         imageUrl: url,
-        model: "dall-e-3",
+        model: "gpt-image-1",
         sourceName: uploadedFile?.name ?? undefined,
       });
       setShowCustomization(true);

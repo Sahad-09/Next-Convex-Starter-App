@@ -4,7 +4,8 @@ export interface OpenAIImageRequest {
   prompt: string;
   model?: string;
   size?: "1024x1024" | "1792x1024" | "1024x1792";
-  quality?: "standard" | "hd";
+  // Support legacy DALL·E 3 values and gpt-image-1 values
+  quality?: "standard" | "hd" | "low" | "medium" | "high" | "auto";
 }
 
 export const generateJelly3DIcon = async (

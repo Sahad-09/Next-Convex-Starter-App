@@ -15,11 +15,18 @@ export async function POST(req: NextRequest) {
     }
 
     const body = await req.json();
-    const { prompt, model = "dall-e-3", size = "1024x1024", quality = "standard" } = body ?? {};
+    const { prompt, model = "gpt-image-1", size = "1024x1024", quality = "high" } = body ?? {};
 
     if (!prompt || typeof prompt !== "string") {
       return NextResponse.json({ error: "Invalid prompt" }, { status: 400 });
     }
+
+    console.log("[generate-icon] Requesting OpenAI", {
+      model,
+      size,
+      quality,
+      promptLen: typeof prompt === "string" ? prompt.length : 0,
+    });
 
     const response = await fetch(OPENAI_URL, {
       method: "POST",
@@ -31,7 +38,14 @@ export async function POST(req: NextRequest) {
     });
 
     if (!response.ok) {
-      const err = await response.json().catch(() => ({}));
+      const raw = await response.text();
+      console.error("[generate-icon] OpenAI image error", response.status, raw);
+      let err: any = {};
+      try {
+        err = JSON.parse(raw);
+      } catch {
+        // keep err as {}
+      }
       return NextResponse.json(
         { error: err?.error?.message || `OpenAI request failed (${response.status})` },
         { status: 500 }
@@ -41,6 +55,7 @@ export async function POST(req: NextRequest) {
     const data = (await response.json()) as { data?: Array<{ url: string }> };
     const url = data?.data?.[0]?.url;
     if (!url) return NextResponse.json({ error: "No image generated" }, { status: 500 });
+    console.log("[generate-icon] Success, received image URL");
     return NextResponse.json({ url });
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
