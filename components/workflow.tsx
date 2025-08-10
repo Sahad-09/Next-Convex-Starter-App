@@ -142,7 +142,7 @@ const Workflow: React.FC<WorkflowProps> = ({
                 <Download className="w-4 h-4" />
                 <span>Download</span>
               </JellyButton>
-              <JellyButton variant="jelly" className="flex-1" onClick={() => {}}>
+              <JellyButton variant="jelly" className="flex-1" onClick={() => { }}>
                 <Heart className="w-4 h-4" />
                 <span>Love it!</span>
               </JellyButton>
@@ -201,7 +201,7 @@ const Workflow: React.FC<WorkflowProps> = ({
                   />
                 </div>
               </div>
-              <JellyButton variant="primary" className="w-full mt-6" onClick={() => {}}>
+              <JellyButton variant="primary" className="w-full mt-6" onClick={() => { }}>
                 <span>Apply Changes</span>
               </JellyButton>
             </div>

@@ -102,43 +102,21 @@ export const downloadImage = (
 };
 
 
-// Exact system prompt required for Jelly 3D icon generation
-export const JELLY_3D_SYSTEM_PROMPT = `You are a specialized AI that creates Jelly 3D Icons with the following specifications:
+// System default prompt for logo-only 3D icon generation
+export const JELLY_3D_SYSTEM_PROMPT = `You are a specialized AI that creates 3D digital icons from provided logos.
 
-{
-  "style": "Jelly 3D Icon",
-  "object": "User-uploaded logo or emoji (e.g. Netflix N, Ghost, Spotify icon, etc.)",
-  "base": {
-    "shape": "Rounded square",
-    "material": "Soft translucent jelly-like material",
-    "color": "A strong contrasting color to icon (e.g. purple, green, blue)",
-    "lighting": "Inner glow and soft ambient shadows that gently fade outward"
-  },
-  "icon": {
-    "material": "Jelly/glassy translucent look, softly glowing from within",
-    "color": "Brighter tone or brand color, always with a jelly-glass texture",
-    "depth": "3D extruded with rounded edges and subtle bottom shadow",
-    "placement": "Centered with even padding inside base"
-  },
-  "render": {
-    "camera": "Front orthographic view with centered framing",
-    "lighting": "Studio-quality lighting with soft top-left highlight and directional drop shadow underneath icon",
-    "shadow": {
-      "style": "Soft diffused base shadow with slight blur",
-      "position": "Directly under icon, slightly offset down",
-      "opacity": 0.15,
-      "spread": "Medium, matching other icons in set"
-    },
-    "background": "Soft warm grey or pastel cream for consistency",
-    "dimensions": "1:1 square ratio, minimum 1024x1024",
-    "file_format": "PNG"
-  },
-  "style_notes": "Ensure consistent lighting and shadow softness across the set. Shadows should appear slightly beneath and behind the icon with soft blur — matching the Spotify, Camera, and Weather icon samples exactly. Avoid flat or harsh shadows. Emphasize clean separation between icon and base through shadow and depth."
-}
+Requirements:
+- Only the logo itself; no background base, container, badge, or rounded-square button.
+- Front orthographic view, perfectly straight: no tilt, rotation, skew, or perspective warp.
+- Preserve the logo’s original colors as much as possible; avoid recoloring unless the source is monochrome.
+- Slight extrusion of the logo geometry; smooth rounded edges.
+- Material: soft jelly-like translucent/glassy look with a glossy finish and soft reflections.
+- Lighting: gentle top-left studio highlight with soft ambient fill.
+- Shadow: soft, diffused drop shadow directly underneath the logo.
+- Background: fully transparent; output as PNG with alpha channel.
+- Composition: centered, evenly framed, no cropping, 1:1 square (minimum 1024x1024).
 
-Create jelly 3D icons that are translucent, soft, with inner glow effects and perfect studio lighting.
-
-A 3D-rendered icon showcases the uploaded logo, placed at the center of a soft, jelly-like button with rounded corners. The icon appears raised, glowing subtly with a soft internal halo effect. The button base features a contrasting translucent color, while the logo adopts a brighter tone with a jelly-glass texture. The background is a smooth gradient of pastel or warm cream, with soft ambient lighting and diffused shadows enhancing the overall depth and clarity.`;
+Follow the above precisely.`;
 
 export function buildEnhancedPrompt(
   logoDescription: string,
@@ -149,25 +127,23 @@ export function buildEnhancedPrompt(
     shadowOpacity?: number;
   }
 ): string {
-  const baseColor = options?.baseColor || "vibrant purple with translucent jelly material";
-  const iconColor = options?.iconColor || "bright contrasting color with glass-like finish";
+  const iconColor = options?.iconColor || "use the original logo colors";
   const glow = options?.glowIntensity ?? 70;
   const shadow = options?.shadowOpacity ?? 15;
 
   return `${JELLY_3D_SYSTEM_PROMPT}
 
-Create a jelly 3D icon for: ${logoDescription}
+Create the 3D icon for: ${logoDescription}
 
 Additional specifications:
-- Base color: ${baseColor}
-- Icon color: ${iconColor}
-- Glow intensity: ${glow}% inner glow
-- Shadow opacity: ${shadow}% soft diffused shadow
-- Material: Translucent jelly/glass hybrid with soft inner lighting
-- Style: Modern iOS Big Sur aesthetic with enhanced jelly properties
-- Quality: Ultra high resolution, perfect for app store use
-
-Render as a perfect 1024x1024 jelly 3D icon with studio lighting and soft shadows.`;
+- Color: ${iconColor}; preserve brand colors as much as possible
+- Geometry: slight extrusion; smooth rounded edges
+- Material: soft translucent jelly/glass effect with subtle internal glow (${glow}%)
+- Camera: front orthographic; perfectly straight; no tilt or rotation
+- Lighting: gentle top-left studio light highlight; soft ambient fill
+- Shadow: soft diffused drop shadow directly underneath (opacity ~${shadow}%)
+- Background: transparent PNG with alpha; no background base, container, or gradient
+- Quality: ultra high resolution, square 1024x1024`;
 }
 
 
