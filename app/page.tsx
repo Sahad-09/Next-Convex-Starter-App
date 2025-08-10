@@ -47,10 +47,7 @@ function IndexContent() {
     if (!uploadedFile) return;
     setIsGenerating(true);
     try {
-      const description = uploadedFile?.name
-        ? `the uploaded asset: ${uploadedFile.name}`
-        : "uploaded logo";
-      const prompt = buildEnhancedPrompt(description);
+      const prompt = buildEnhancedPrompt();
       const url = await generateJelly3DIcon(prompt);
       setGeneratedIcon(url);
       // Fire-and-forget save to Convex for user history

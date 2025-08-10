@@ -152,75 +152,7 @@ const Workflow: React.FC<WorkflowProps> = ({
         </div>
       </JellyCard>
 
-      {/* 3. Customization Section */}
-      <JellyCard>
-        <div className="space-y-6">
-          <div className="flex items-center space-x-3">
-            <div className="w-10 h-10 bg-gradient-to-r from-pink-500 to-rose-500 rounded-xl flex items-center justify-center shadow-[0_4px_20px_rgba(236,72,153,0.4)]">
-              <span className="text-white font-bold">3</span>
-            </div>
-            <div>
-              <h3 className="text-xl font-bold text-white">Perfect Your Style</h3>
-              <p className="text-sm text-gray-300">Fine-tune every detail</p>
-            </div>
-          </div>
-          {showCustomization ? (
-            <div className="space-y-4">
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300">Jelly Transparency</label>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="70"
-                    className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider-thumb-purple"
-                  />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300">Inner Glow</label>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="85"
-                    className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider-thumb-pink"
-                  />
-                </div>
-              </div>
-              <div className="space-y-3">
-                <label className="text-sm font-medium text-gray-300">Glass Reflection</label>
-                <div className="relative">
-                  <input
-                    type="range"
-                    min="0"
-                    max="100"
-                    defaultValue="60"
-                    className="w-full h-2 bg-white/20 rounded-lg appearance-none cursor-pointer slider-thumb-cyan"
-                  />
-                </div>
-              </div>
-              <JellyButton variant="primary" className="w-full mt-6" onClick={() => { }}>
-                <span>Apply Changes</span>
-              </JellyButton>
-            </div>
-          ) : (
-            <div className="h-48 bg-white/5 backdrop-blur-xl rounded-2xl border border-white/20 flex items-center justify-center">
-              <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-gradient-to-br from-pink-500/20 to-rose-500/20 rounded-2xl flex items-center justify-center mx-auto border border-white/20">
-                  <Eye className="w-8 h-8 text-pink-300" />
-                </div>
-                <div>
-                  <p className="text-white font-medium">Customization awaits</p>
-                  <p className="text-xs text-gray-400">Generate an icon to unlock options</p>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      </JellyCard>
+      {/* customization disabled for now */}
     </div>
   );
 };
