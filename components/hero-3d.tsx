@@ -1,7 +1,7 @@
 "use client"
 
-import React, { useState, useEffect, useRef, useMemo } from "react";
-import { Sparkles, Zap, Eye, ArrowRight } from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { Sparkles, Zap, ArrowRight } from "lucide-react";
 import { FloatingOrb } from "@/components/jelly-components";
 
 interface MousePosition {
@@ -135,6 +135,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
             <div className={`relative flex flex-col items-center ${className}`}>
                 <div className="w-64 h-64 flex items-center justify-center mb-4">
                     <div className="relative w-48 h-48 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-lg border border-white/10">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                             src={currentIcon.flat}
                             alt={`${currentIcon.name} Flat 2D Logo`}
@@ -233,6 +234,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                     transform: `translateZ(10px) scale(${1 + Math.sin(ripplePhase * 2) * 0.02})`
                                 }}
                             >
+                                {/* eslint-disable-next-line @next/next/no-img-element */}
                                 <img
                                     src={currentIcon.jelly}
                                     alt={`${currentIcon.name} Jelly 3D Logo`}
@@ -250,6 +252,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
                         {/* Reflection */}
                         <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-32 h-16 opacity-20">
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
                             <img
                                 src={currentIcon.jelly}
                                 alt="Reflection"

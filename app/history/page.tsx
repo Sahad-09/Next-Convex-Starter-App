@@ -33,7 +33,7 @@ function Content() {
         <p className="text-gray-400">No icons yet. Generate one on the home page.</p>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
-          {items.map((it: any) => (
+          {items.map((it) => (
             <div key={it._id} className="bg-white/5 rounded-xl p-4 border border-white/10">
               <div className="aspect-square bg-black/20 rounded-lg flex items-center justify-center overflow-hidden">
                 {it.imageUrl ? (

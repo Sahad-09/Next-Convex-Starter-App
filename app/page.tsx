@@ -3,10 +3,10 @@
 import React, { useCallback, useState } from "react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { SignInButton, UserButton } from "@clerk/nextjs";
-import { FloatingOrb, Jelly3DIcon, JellyButton } from "@/components/jelly-components";
+// import { FloatingOrb, Jelly3DIcon, JellyButton } from "@/components/jelly-components";
 import Hero3D from "@/components/hero-3d";
 import Workflow from "@/components/workflow";
-import { Sparkles, Zap, Eye } from "lucide-react";
+// import { Sparkles, Zap, Eye } from "lucide-react";
 import { buildEnhancedPrompt } from "@/utils/logo-3d";
 import { generateJelly3DIcon } from "@/utils/openai-api";
 import Link from "next/link";
@@ -66,7 +66,7 @@ function IndexContent() {
     } finally {
       setIsGenerating(false);
     }
-  }, [uploadedFile]);
+  }, [uploadedFile, saveFromUrl]);
 
   return (
     <Hero3D 
