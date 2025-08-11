@@ -118,13 +118,13 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const data = (await response.json()) as {
-      data?: Array<{ url?: string; b64_json?: string; [k: string]: unknown }>;
-      [k: string]: unknown;
-    };
-    const item = data?.data?.[0] ?? {};
-    const url = (item as any)?.url as string | undefined;
-    const b64 = (item as any)?.b64_json as string | undefined;
+    type OpenAIImageDataItem = { url?: string; b64_json?: string };
+    type OpenAIImageResponse = { data?: OpenAIImageDataItem[] };
+
+    const data = (await response.json()) as OpenAIImageResponse;
+    const item: OpenAIImageDataItem | undefined = data?.data?.[0];
+    const url: string | undefined = item?.url;
+    const b64: string | undefined = item?.b64_json;
     if (!url) {
       if (b64) {
         console.log("[generate-icon] Received base64 image, returning data URL", { durationMs });
@@ -132,17 +132,21 @@ export async function POST(req: NextRequest) {
       }
       console.error("[generate-icon] No image generated", {
         durationMs,
-        dataKeys: Object.keys(data || {}),
-        hasDataArray: Array.isArray((data as any).data),
-        dataLen: Array.isArray((data as any).data) ? (data as any).data.length : 0,
-        itemKeys: Object.keys(item || {}),
+        dataKeys: Object.keys(data || {} as OpenAIImageResponse),
+        hasDataArray: Array.isArray(data?.data),
+        dataLen: Array.isArray(data?.data) ? data!.data!.length : 0,
+        itemKeys: item ? Object.keys(item) : [],
       });
       return NextResponse.json({ error: "No image generated" }, { status: 500 });
     }
     console.log("[generate-icon] Success, received image URL", { durationMs });
     return NextResponse.json({ url });
   } catch (err) {
-    const isAbort = (err as any)?.name === "AbortError";
+    const isAbort =
+      typeof err === "object" &&
+      err !== null &&
+      "name" in (err as Record<string, unknown>) &&
+      (err as { name?: string }).name === "AbortError";
     console.error(
       "[generate-icon] Exception",
       isAbort ? "AbortError (timeout)" : (err as Error)?.message || err

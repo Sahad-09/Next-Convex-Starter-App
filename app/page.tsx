@@ -8,7 +8,6 @@ import Hero3D from "@/components/hero-3d";
 import Workflow from "@/components/workflow";
 // import { Sparkles, Zap, Eye } from "lucide-react";
 import { buildEnhancedPrompt } from "@/utils/logo-3d";
-import { generateJelly3DIcon } from "@/utils/openai-api";
 import Link from "next/link";
 import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -99,7 +98,7 @@ function IndexContent() {
     } finally {
       setIsGenerating(false);
     }
-  }, [uploadedFile, saveFromUrl]);
+  }, [uploadedFile, saveFromUrl, generateUploadUrl, insertIcon]);
 
   return (
     <Hero3D 

@@ -21,7 +21,7 @@ const Workflow: React.FC<WorkflowProps> = ({
   generatedIcon,
   generateIcon,
   // showCustomization is intentionally unused for now
-  showCustomization,
+  showCustomization: _showCustomization,
 }) => {
   const handleDownload = async () => {
     if (!generatedIcon) return;
