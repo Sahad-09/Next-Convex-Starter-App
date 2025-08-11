@@ -9,6 +9,8 @@ export default defineSchema({
     model: v.optional(v.string()),
     sourceName: v.optional(v.string()),
     storageId: v.id("_storage"),
+    // original uploaded logo (optional)
+    sourceStorageId: v.optional(v.id("_storage")),
     createdAt: v.number(),
   }).index("by_user_createdAt", ["userId", "createdAt"]),
 

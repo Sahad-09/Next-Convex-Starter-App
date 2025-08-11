@@ -10,8 +10,9 @@ import Workflow from "@/components/workflow";
 import { buildEnhancedPrompt } from "@/utils/logo-3d";
 import { generateJelly3DIcon } from "@/utils/openai-api";
 import Link from "next/link";
-import { useAction } from "convex/react";
+import { useAction, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
 
 export default function Home() {
   return (
@@ -28,6 +29,8 @@ export default function Home() {
 
 function IndexContent() {
   const saveFromUrl = useAction(api.icons.saveFromUrl);
+  const generateUploadUrl = useMutation(api.icons.generateUploadUrl);
+  const insertIcon = useMutation(api.icons.insert);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [generatedIcon, setGeneratedIcon] = useState<string>("");
   const [isGenerating, setIsGenerating] = useState<boolean>(false);
@@ -48,19 +51,48 @@ function IndexContent() {
     setIsGenerating(true);
     try {
       const prompt = buildEnhancedPrompt();
-      const url = await generateJelly3DIcon(prompt, {
-        model: "gpt-image-1",
-        size: "1024x1024",
-        quality: "high",
-      });
+      // When a file is present, send multipart to server so OpenAI can incorporate it
+      const form = new FormData();
+      form.append("prompt", prompt);
+      form.append("model", "gpt-image-1");
+      form.append("size", "1024x1024");
+      form.append("quality", "high");
+      form.append("file", uploadedFile, uploadedFile.name || "logo.png");
+
+      const res = await fetch("/api/generate-icon", { method: "POST", body: form });
+      if (!res.ok) throw new Error("Failed to generate");
+      const { url } = (await res.json()) as { url: string };
       setGeneratedIcon(url);
-      // Fire-and-forget save to Convex for user history
-      void saveFromUrl({
-        prompt,
-        imageUrl: url,
-        model: "gpt-image-1",
-        sourceName: uploadedFile?.name ?? undefined,
-      });
+      // Save to history: data URL path uploads directly to Convex storage; http(s) uses server action
+      if (url.startsWith("data:")) {
+        try {
+          const uploadUrl = await generateUploadUrl({});
+          const dataResp = await fetch(url);
+          const blob = await dataResp.blob();
+          const uploadResp = await fetch(uploadUrl, {
+            method: "POST",
+            headers: { "Content-Type": blob.type || "image/png" },
+            body: blob,
+          });
+          const json = (await uploadResp.json()) as { storageId: string };
+          const storageId = json.storageId as Id<"_storage">;
+          await insertIcon({
+            prompt,
+            storageId,
+            model: "gpt-image-1",
+            sourceName: uploadedFile?.name ?? undefined,
+          });
+        } catch {
+          // ignore store error
+        }
+      } else {
+        void saveFromUrl({
+          prompt,
+          imageUrl: url,
+          model: "gpt-image-1",
+          sourceName: uploadedFile?.name ?? undefined,
+        });
+      }
       setShowCustomization(true);
     } catch {
       // No toast layer configured; keep silent but stop loader

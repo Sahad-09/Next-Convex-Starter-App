@@ -2,6 +2,14 @@ import { mutation, query, action } from "./_generated/server";
 import { v } from "convex/values";
 import { api } from "./_generated/api";
 
+// Generate client upload URL for Convex storage
+export const generateUploadUrl = mutation({
+  args: {},
+  handler: async (ctx): Promise<string> => {
+    return await ctx.storage.generateUploadUrl();
+  },
+});
+
 // Insert a record after the image is already in Convex storage
 export const insert = mutation({
   args: {
@@ -9,6 +17,7 @@ export const insert = mutation({
     storageId: v.id("_storage"),
     model: v.optional(v.string()),
     sourceName: v.optional(v.string()),
+    sourceStorageId: v.optional(v.id("_storage")),
   },
   handler: async (ctx, args) => {
     const identity = await ctx.auth.getUserIdentity();
@@ -21,6 +30,7 @@ export const insert = mutation({
       model: args.model,
       sourceName: args.sourceName,
       storageId: args.storageId,
+      sourceStorageId: args.sourceStorageId,
       createdAt: Date.now(),
     });
     return id;
