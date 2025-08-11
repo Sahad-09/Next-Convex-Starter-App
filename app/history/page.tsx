@@ -1,4 +1,5 @@
 "use client";
+import { useState } from "react";
 import { Authenticated, Unauthenticated } from "convex/react";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
@@ -6,23 +7,73 @@ import Link from "next/link";
 import { JellyCard, JellyButton, FloatingOrb } from "@/components/jelly-components";
 import { Download, Clock, Sparkles } from "lucide-react";
 import { UserButton } from "@clerk/nextjs";
+import AuthModal from "@/components/auth-modal";
 
 export default function HistoryPage() {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState(false);
   return (
     <>
       <Authenticated>
         <Content />
       </Authenticated>
       <Unauthenticated>
-        <div className="min-h-[50vh] w-full flex items-center justify-center px-6">
-          <JellyCard className="max-w-xl w-full text-center">
-            <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2">
-              Sign in to view your history
-            </h1>
-            <p className="text-sm text-gray-300">Your generated 3D icons will appear here after you sign in.</p>
-          </JellyCard>
+        <div
+          className="min-h-screen relative overflow-hidden"
+          style={{
+            background:
+              "radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3), transparent 50%), radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3), transparent 50%), radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2), transparent 50%), linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%)",
+          }}
+        >
+          <div className="fixed inset-0 overflow-hidden pointer-events-none">
+            <FloatingOrb size={200} delay={0} color="purple" />
+            <FloatingOrb size={150} delay={2} color="blue" />
+            <FloatingOrb size={100} delay={4} color="pink" />
+          </div>
+
+          <header className="relative z-50 backdrop-blur-xl bg-white/5 border-b border-white/10">
+            <div className="container mx-auto px-6 py-4 flex items-center justify-between">
+              <div className="flex items-center space-x-3">
+                <div className="relative">
+                  <div className="w-10 h-10 bg-gradient-to-br from-purple-500 via-pink-500 to-cyan-500 rounded-xl flex items-center justify-center">
+                    <Sparkles className="w-5 h-5 text-white" />
+                  </div>
+                  <div className="absolute -inset-1 bg-gradient-to-br from-purple-400 to-pink-600 rounded-xl blur opacity-30" />
+                </div>
+                <div>
+                  <h1 className="text-lg font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
+                    Jelly Forge
+                  </h1>
+                </div>
+              </div>
+              <div className="flex items-center gap-4">
+                <Link href="/" className="text-sm text-gray-300 hover:text-white">Home</Link>
+                <button
+                  type="button"
+                  onClick={() => setIsAuthModalOpen(true)}
+                  className="text-sm text-gray-300 hover:text-white px-3 py-1.5 rounded-lg border border-white/15 bg-white/5 hover:bg-white/10"
+                >
+                  Sign in
+                </button>
+              </div>
+            </div>
+          </header>
+
+          <main className="relative z-10 container mx-auto px-6 py-16">
+            <div className="w-full flex items-center justify-center">
+              <JellyCard className="max-w-xl w-full text-center">
+                <h1 className="text-2xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent mb-2">
+                  Sign in to view your history
+                </h1>
+                <p className="text-sm text-gray-300 mb-6">Your generated 3D icons will appear here after you sign in.</p>
+                <JellyButton onClick={() => setIsAuthModalOpen(true)} className="w-full">
+                  <span>Sign in</span>
+                </JellyButton>
+              </JellyCard>
+            </div>
+          </main>
         </div>
       </Unauthenticated>
+      <AuthModal isOpen={isAuthModalOpen} onClose={() => setIsAuthModalOpen(false)} />
     </>
   );
 }

@@ -38,7 +38,7 @@ const Workflow: React.FC<WorkflowProps> = ({
     }
   };
   return (
-    <div className="grid lg:grid-cols-3 gap-8 mb-20">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-20 max-w-5xl mx-auto">
       {/* 1. Upload Section */}
       <JellyCard glow>
         <div className="space-y-6">
