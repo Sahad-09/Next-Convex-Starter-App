@@ -1,6 +1,6 @@
-# Next-Convex-Starter-App
+# Jelly Forge — AI 3D Icon & App Icon Generator
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app), using [Convex](https://www.convex.dev/) as the backend.
+Jelly Forge turns logos into stunning 3D jelly icons with glassmorphism effects. Download transparent PNGs ready for iOS, Android, and the web. Built with [Next.js](https://nextjs.org) and [Convex](https://www.convex.dev/), with authentication by [Clerk](https://clerk.com/).
 
 ## Getting Started
 

@@ -115,7 +115,6 @@ function IndexContent() {
           isGenerating={isGenerating}
           generatedIcon={generatedIcon}
           generateIcon={generateIcon}
-          showCustomization={showCustomization}
         />
       }
     />

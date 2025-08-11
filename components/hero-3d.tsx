@@ -1,6 +1,7 @@
-"use client"
+"use client";
 
 import React, { useState, useEffect, useRef } from "react";
+import Image from "next/image";
 import { Sparkles, Zap, ArrowRight } from "lucide-react";
 import { FloatingOrb } from "@/components/jelly-components";
 
@@ -44,8 +45,8 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
             }
         };
 
-        window.addEventListener('mousemove', handleMouseMove);
-        return () => window.removeEventListener('mousemove', handleMouseMove);
+        window.addEventListener("mousemove", handleMouseMove);
+        return () => window.removeEventListener("mousemove", handleMouseMove);
     }, []);
 
     // Particle system
@@ -58,25 +59,24 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
             opacity: Math.random() * 0.5 + 0.2,
             velocity: {
                 x: (Math.random() - 0.5) * 0.5,
-                y: (Math.random() - 0.5) * 0.5
+                y: (Math.random() - 0.5) * 0.5,
             },
             life: 0,
-            maxLife: Math.random() * 300 + 200
+            maxLife: Math.random() * 300 + 200,
         });
 
         const updateParticles = () => {
-            setParticles(prev => {
+            setParticles((prev) => {
                 const updated = prev
-                    .map(p => ({
+                    .map((p) => ({
                         ...p,
                         x: p.x + p.velocity.x,
                         y: p.y + p.velocity.y,
                         life: p.life + 1,
-                        opacity: Math.max(0, p.opacity - 0.002)
+                        opacity: Math.max(0, p.opacity - 0.002),
                     }))
-                    .filter(p => p.life < p.maxLife && p.opacity > 0);
+                    .filter((p) => p.life < p.maxLife && p.opacity > 0);
 
-                // Add new particles occasionally
                 if (Math.random() < 0.1 && updated.length < 50) {
                     updated.push(createParticle());
                 }
@@ -87,7 +87,6 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
             animationRef.current = requestAnimationFrame(updateParticles);
         };
 
-        // Initialize with some particles
         setParticles(Array.from({ length: 20 }, createParticle));
         updateParticles();
 
@@ -100,9 +99,9 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
     // Icon showcase data
     const iconShowcase = [
-        { flat: '/twitter_flat.png', jelly: '/twitter_jelly.png', name: 'Twitter' },
-        { flat: '/apple_flat.png', jelly: '/apple_jelly.png', name: 'Apple' },
-        { flat: '/tesla_flat.png', jelly: '/tesla_jelly.png', name: 'Tesla' },
+        { flat: "/twitter_flat.png", jelly: "/twitter_jelly.png", name: "Twitter" },
+        { flat: "/apple_flat.png", jelly: "/apple_jelly.png", name: "Apple" },
+        { flat: "/tesla_flat.png", jelly: "/tesla_jelly.png", name: "Tesla" },
     ];
 
     const [currentIconIndex, setCurrentIconIndex] = useState(0);
@@ -112,19 +111,14 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
         setIsLoaded(true);
     }, []);
 
-    // Simple, reliable icon rotation
     useEffect(() => {
         const interval = setInterval(() => {
             setIsTransitioning(true);
-
-            // Small delay for fade out, then change icon
             setTimeout(() => {
-                setCurrentIconIndex(prev => (prev + 1) % iconShowcase.length);
+                setCurrentIconIndex((prev) => (prev + 1) % iconShowcase.length);
                 setIsTransitioning(false);
             }, 300);
-
-        }, 4000); // Show each icon for 4 seconds
-
+        }, 4000);
         return () => clearInterval(interval);
     }, [iconShowcase.length]);
 
@@ -135,14 +129,13 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
             <div className={`relative flex flex-col items-center ${className}`}>
                 <div className="w-64 h-64 flex items-center justify-center mb-4">
                     <div className="relative w-48 h-48 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-lg border border-white/10">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
+                        <Image
                             src={currentIcon.flat}
                             alt={`${currentIcon.name} Flat 2D Logo`}
-                            className="w-32 h-32 object-contain transition-opacity duration-300 ease-in-out"
-                            style={{
-                                opacity: isTransitioning ? 0 : 1
-                            }}
+                            width={128}
+                            height={128}
+                            className="object-contain transition-opacity duration-300 ease-in-out"
+                            style={{ opacity: isTransitioning ? 0 : 1 }}
                         />
                         <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
                     </div>
@@ -165,26 +158,22 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
         useEffect(() => {
             const interval = setInterval(() => {
-                setRipplePhase(prev => (prev + 0.1) % (Math.PI * 2));
+                setRipplePhase((prev) => (prev + 0.1) % (Math.PI * 2));
             }, 50);
             return () => clearInterval(interval);
         }, []);
 
         return (
             <div className={`relative flex flex-col items-center ${className}`}>
-                {/* Reflection surface */}
                 <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-96 h-2 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-full blur-sm" />
-
-                {/* 3D Logo container */}
                 <div
                     className="relative w-64 h-64 flex items-center justify-center perspective-1000 mb-4"
                     style={{
-                        transform: `rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg)`
+                        transform: `rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg)`,
                     }}
                 >
-                    {/* Particle glow around logo */}
                     <div className="absolute inset-0">
-                        {particles.map(particle => (
+                        {particles.map((particle) => (
                             <div
                                 key={particle.id}
                                 className="absolute w-1 h-1 bg-purple-400 rounded-full"
@@ -193,79 +182,67 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                     top: `${(particle.y / 600) * 100}%`,
                                     opacity: particle.opacity,
                                     transform: `scale(${particle.size})`,
-                                    filter: 'blur(0.5px)',
-                                    boxShadow: '0 0 6px currentColor'
+                                    filter: "blur(0.5px)",
+                                    boxShadow: "0 0 6px currentColor",
                                 }}
                             />
                         ))}
                     </div>
-
-                    {/* Main 3D logo */}
                     <div
                         className="relative w-48 h-48 transition-all duration-1000 ease-out"
                         style={{
                             transform: `translateZ(30px) rotateY(${Math.sin(Date.now() * 0.001) * 5}deg) rotateX(${Math.cos(Date.now() * 0.0015) * 3}deg)`,
-                            filter: `hue-rotate(${ripplePhase * 10}deg)`
+                            filter: `hue-rotate(${ripplePhase * 10}deg)`,
                         }}
                     >
-                        {/* Glass/jelly effect layers */}
                         <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-pink-500/40 to-cyan-400/30 rounded-3xl backdrop-blur-xl border-2 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden">
-                            {/* Inner glow */}
                             <div className="absolute inset-2 bg-gradient-to-br from-white/30 via-purple-200/20 to-transparent rounded-3xl" />
-
-                            {/* Highlight */}
                             <div className="absolute top-4 left-4 w-16 h-16 bg-gradient-to-br from-white/60 to-transparent rounded-2xl blur-sm" />
-
-                            {/* Ripple effect */}
                             <div
                                 className="absolute inset-0 rounded-3xl"
                                 style={{
                                     background: `radial-gradient(circle at ${50 + Math.sin(ripplePhase) * 20}% ${50 + Math.cos(ripplePhase) * 20}%, rgba(255,255,255,0.1) 0%, transparent 60%)`,
-                                    transform: `scale(${1 + Math.sin(ripplePhase) * 0.05})`
+                                    transform: `scale(${1 + Math.sin(ripplePhase) * 0.05})`,
                                 }}
                             />
                         </div>
-
-                        {/* Logo content */}
                         <div className="absolute inset-0 flex items-center justify-center">
                             <div
                                 className="relative"
                                 style={{
-                                    transform: `translateZ(10px) scale(${1 + Math.sin(ripplePhase * 2) * 0.02})`
+                                    transform: `translateZ(10px) scale(${1 + Math.sin(ripplePhase * 2) * 0.02})`,
                                 }}
                             >
-                                {/* eslint-disable-next-line @next/next/no-img-element */}
-                                <img
+                                <Image
                                     src={currentIcon.jelly}
                                     alt={`${currentIcon.name} Jelly 3D Logo`}
-                                    className="w-32 h-32 object-contain drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] filter brightness-110 transition-opacity duration-300 ease-in-out"
+                                    width={128}
+                                    height={128}
+                                    className="drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] filter brightness-110 transition-opacity duration-300 ease-in-out object-contain"
                                     style={{
                                         filter: `brightness(1.1) contrast(1.1) saturate(1.2) hue-rotate(${Math.sin(ripplePhase) * 5}deg)`,
-                                        opacity: isTransitioning ? 0 : 1
+                                        opacity: isTransitioning ? 0 : 1,
                                     }}
                                 />
-
-                                {/* Internal light scattering overlay */}
                                 <div className="absolute inset-0 bg-gradient-radial from-white/10 via-transparent to-transparent rounded-full animate-pulse" />
                             </div>
                         </div>
-
-                        {/* Reflection */}
                         <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-32 h-16 opacity-20">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
+                            <Image
                                 src={currentIcon.jelly}
                                 alt="Reflection"
-                                className="w-full h-full object-contain blur-sm transform scale-y-[-1] scale-75 transition-opacity duration-300 ease-in-out"
+                                width={128}
+                                height={64}
+                                className="object-contain blur-sm transform scale-y-[-1] scale-75 transition-opacity duration-300 ease-in-out"
                                 style={{
-                                    maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 50%, transparent 100%)',
-                                    opacity: isTransitioning ? 0 : 1
+                                    maskImage:
+                                        "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 50%, transparent 100%)",
+                                    opacity: isTransitioning ? 0 : 1,
                                 }}
                             />
                         </div>
                     </div>
                 </div>
-
                 <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
                     <span
                         className="text-white font-medium transition-opacity duration-300"
@@ -307,7 +284,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                             </div>
                             <div>
                                 <h1 className="text-lg font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-                                    JellyMagic AI
+                                    Jelly Forge
                                 </h1>
                             </div>
                         </div>
@@ -480,7 +457,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                 </div>
                                 <div>
                                     <h3 className="text-2xl font-bold bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
-                                        JellyMagic AI
+                                        Jelly Forge
                                     </h3>
                                     <p className="text-sm text-gray-400">Transform logos into 3D jelly masterpieces</p>
                                 </div>
@@ -546,7 +523,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                     {/* Bottom Section */}
                     <div className="border-t border-white/10 mt-12 pt-8 flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
                         <div className="text-gray-400 text-sm">
-                            © 2024 JellyMagic AI. All rights reserved.
+                            © 2024 Jelly Forge. All rights reserved.
                         </div>
                         <div className="flex space-x-6 text-sm">
                             <a href="#" className="text-gray-400 hover:text-purple-300 transition-colors duration-300">
