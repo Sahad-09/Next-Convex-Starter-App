@@ -111,6 +111,19 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
         setIsLoaded(true);
     }, []);
 
+    // Preload all showcase images once to ensure instant swaps and best quality
+    useEffect(() => {
+        if (typeof window === "undefined") return;
+        const urls = Array.from(
+            new Set(iconShowcase.flatMap((i) => [i.flat, i.jelly]))
+        );
+        urls.forEach((url) => {
+            const img = new window.Image();
+            img.decoding = "async";
+            img.src = url;
+        });
+    }, []);
+
     useEffect(() => {
         const interval = setInterval(() => {
             setIsTransitioning(true);
@@ -127,22 +140,25 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
         return (
             <div className={`relative flex flex-col items-center ${className}`}>
-                <div className="w-64 h-64 flex items-center justify-center mb-4">
-                    <div className="relative w-48 h-48 bg-white/5 backdrop-blur-sm rounded-3xl flex items-center justify-center shadow-lg border border-white/10">
+                <div className="w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 flex items-center justify-center mb-2 sm:mb-4">
+                    <div className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 bg-white/5 backdrop-blur-sm rounded-2xl sm:rounded-3xl flex items-center justify-center shadow-lg border border-white/10">
                         <Image
                             src={currentIcon.flat}
                             alt={`${currentIcon.name} Flat 2D Logo`}
                             width={128}
                             height={128}
-                            className="object-contain transition-opacity duration-300 ease-in-out"
+                            className="object-contain transition-opacity duration-300 ease-in-out w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32"
                             style={{ opacity: isTransitioning ? 0 : 1 }}
+                            priority
+                            loading="eager"
+                            fetchPriority="high"
                         />
-                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-3xl" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-white/5 to-transparent rounded-2xl sm:rounded-3xl" />
                     </div>
                 </div>
-                <div className="bg-white/10 backdrop-blur-sm rounded-full px-4 py-2">
+                <div className="bg-white/10 backdrop-blur-sm rounded-full px-2 py-1 sm:px-4 sm:py-2">
                     <span
-                        className="text-white/70 text-sm font-medium transition-opacity duration-300"
+                        className="text-white/70 text-xs sm:text-sm font-medium transition-opacity duration-300"
                         style={{ opacity: isTransitioning ? 0 : 1 }}
                     >
                         {currentIcon.name} - Flat 2D Logo
@@ -165,9 +181,9 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
         return (
             <div className={`relative flex flex-col items-center ${className}`}>
-                <div className="absolute bottom-16 left-1/2 transform -translate-x-1/2 w-96 h-2 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-full blur-sm" />
+                <div className="absolute bottom-8 sm:bottom-16 left-1/2 transform -translate-x-1/2 w-64 sm:w-96 h-2 bg-gradient-to-r from-transparent via-white/5 to-transparent rounded-full blur-sm" />
                 <div
-                    className="relative w-64 h-64 flex items-center justify-center perspective-1000 mb-4"
+                    className="relative w-40 h-40 sm:w-56 sm:h-56 md:w-64 md:h-64 flex items-center justify-center perspective-1000 mb-2 sm:mb-4"
                     style={{
                         transform: `rotateX(${mousePosition.y * 0.3}deg) rotateY(${mousePosition.x * 0.3}deg)`,
                     }}
@@ -189,17 +205,17 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                         ))}
                     </div>
                     <div
-                        className="relative w-48 h-48 transition-all duration-1000 ease-out"
+                        className="relative w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 transition-all duration-1000 ease-out"
                         style={{
                             transform: `translateZ(30px) rotateY(${Math.sin(Date.now() * 0.001) * 5}deg) rotateX(${Math.cos(Date.now() * 0.0015) * 3}deg)`,
                             filter: `hue-rotate(${ripplePhase * 10}deg)`,
                         }}
                     >
-                        <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-pink-500/40 to-cyan-400/30 rounded-3xl backdrop-blur-xl border-2 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden">
-                            <div className="absolute inset-2 bg-gradient-to-br from-white/30 via-purple-200/20 to-transparent rounded-3xl" />
-                            <div className="absolute top-4 left-4 w-16 h-16 bg-gradient-to-br from-white/60 to-transparent rounded-2xl blur-sm" />
+                        <div className="absolute inset-0 bg-gradient-to-br from-purple-400/30 via-pink-500/40 to-cyan-400/30 rounded-2xl sm:rounded-3xl backdrop-blur-xl border-2 border-white/20 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden">
+                            <div className="absolute inset-1 sm:inset-2 bg-gradient-to-br from-white/30 via-purple-200/20 to-transparent rounded-2xl sm:rounded-3xl" />
+                            <div className="absolute top-2 left-2 sm:top-4 sm:left-4 w-8 h-8 sm:w-16 sm:h-16 bg-gradient-to-br from-white/60 to-transparent rounded-xl sm:rounded-2xl blur-sm" />
                             <div
-                                className="absolute inset-0 rounded-3xl"
+                                className="absolute inset-0 rounded-2xl sm:rounded-3xl"
                                 style={{
                                     background: `radial-gradient(circle at ${50 + Math.sin(ripplePhase) * 20}% ${50 + Math.cos(ripplePhase) * 20}%, rgba(255,255,255,0.1) 0%, transparent 60%)`,
                                     transform: `scale(${1 + Math.sin(ripplePhase) * 0.05})`,
@@ -218,16 +234,19 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                     alt={`${currentIcon.name} Jelly 3D Logo`}
                                     width={128}
                                     height={128}
-                                    className="drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] filter brightness-110 transition-opacity duration-300 ease-in-out object-contain"
+                                    className="drop-shadow-[0_8px_16px_rgba(0,0,0,0.3)] filter brightness-110 transition-opacity duration-300 ease-in-out object-contain w-16 h-16 sm:w-24 sm:h-24 md:w-32 md:h-32"
                                     style={{
                                         filter: `brightness(1.1) contrast(1.1) saturate(1.2) hue-rotate(${Math.sin(ripplePhase) * 5}deg)`,
                                         opacity: isTransitioning ? 0 : 1,
                                     }}
+                                    priority
+                                    loading="eager"
+                                    fetchPriority="high"
                                 />
                                 <div className="absolute inset-0 bg-gradient-radial from-white/10 via-transparent to-transparent rounded-full animate-pulse" />
                             </div>
                         </div>
-                        <div className="absolute -bottom-12 left-1/2 transform -translate-x-1/2 w-32 h-16 opacity-20">
+                        <div className="absolute -bottom-6 sm:-bottom-12 left-1/2 transform -translate-x-1/2 w-20 h-10 sm:w-32 sm:h-16 opacity-20">
                             <Image
                                 src={currentIcon.jelly}
                                 alt="Reflection"
@@ -239,13 +258,15 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                         "linear-gradient(to bottom, transparent 0%, rgba(0,0,0,0.3) 50%, transparent 100%)",
                                     opacity: isTransitioning ? 0 : 1,
                                 }}
+                                priority
+                                loading="eager"
                             />
                         </div>
                     </div>
                 </div>
-                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-4 py-2 border border-white/20">
+                <div className="bg-gradient-to-r from-purple-500/20 to-pink-500/20 backdrop-blur-sm rounded-full px-2 py-1 sm:px-4 sm:py-2 border border-white/20">
                     <span
-                        className="text-white font-medium transition-opacity duration-300"
+                        className="text-white font-medium transition-opacity duration-300 text-xs sm:text-sm"
                         style={{ opacity: isTransitioning ? 0 : 1 }}
                     >
                         {currentIcon.name} - Jelly 3D Magic
@@ -293,17 +314,17 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                 </header>
             )}
 
-            {/* Hero section - full viewport height */}
-            <main className="relative z-10 h-screen flex items-center justify-center">
-                <div className="container mx-auto px-6 max-w-7xl">
+            {/* Hero section - responsive height */}
+            <main className="relative z-10 min-h-screen flex items-center justify-center pt-3 sm:pt-16 md:pt-0">
+                <div className="container mx-auto px-4 sm:px-6 max-w-7xl">
                     {/* New Layout: Title Left, Comparison Right */}
-                    <div className="grid lg:grid-cols-2 gap-16 items-center">
+                    <div className="grid lg:grid-cols-2 gap-8 lg:gap-16 items-center">
 
                         {/* Left side - Title and Description */}
                         <div className="space-y-8">
                             <div>
                                 <h2
-                                    className={`text-5xl md:text-6xl lg:text-7xl font-black mb-6 transition-all duration-2000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                                    className={`text-3xl sm:text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-black mb-4 sm:mb-6 transition-all duration-2000 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                                         }`}
                                 >
                                     <span className="bg-gradient-to-r from-white via-purple-200 to-cyan-200 bg-clip-text text-transparent">
@@ -314,7 +335,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                         To Magical
                                     </span>
                                 </h2>
-                                <p className={`text-lg md:text-xl text-gray-300 leading-relaxed transition-all duration-2000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
+                                <p className={`text-base sm:text-lg md:text-xl text-gray-300 leading-relaxed transition-all duration-2000 delay-300 ${isLoaded ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-8'
                                     }`}>
                                     Transform your ordinary logos into
                                     <span className="text-transparent bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text font-semibold">
@@ -331,12 +352,12 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                             >
                                 <button
                                     onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
-                                    className="group relative overflow-hidden bg-gradient-to-r from-purple-500/90 via-pink-500/90 to-purple-600/90 hover:from-purple-400/95 hover:via-pink-400/95 hover:to-purple-500/95 text-white font-semibold rounded-2xl px-12 py-4 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(168,85,247,0.4)] hover:shadow-[0_12px_40px_rgba(168,85,247,0.6)] transition-all duration-500 transform hover:scale-105 active:scale-98"
+                                    className="group relative overflow-hidden bg-gradient-to-r from-purple-500/90 via-pink-500/90 to-purple-600/90 hover:from-purple-400/95 hover:via-pink-400/95 hover:to-purple-500/95 text-white font-semibold rounded-2xl px-8 sm:px-12 py-3 sm:py-4 backdrop-blur-xl border border-white/20 shadow-[0_8px_32px_rgba(168,85,247,0.4)] hover:shadow-[0_12px_40px_rgba(168,85,247,0.6)] transition-all duration-500 transform hover:scale-105 active:scale-98 w-full sm:w-auto"
                                 >
                                     <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000" />
-                                    <div className="relative flex items-center space-x-2">
-                                        <Zap className="w-6 h-6" />
-                                        <span className="text-lg">Create Your Magic</span>
+                                    <div className="relative flex items-center justify-center space-x-2">
+                                        <Zap className="w-5 h-5 sm:w-6 sm:h-6" />
+                                        <span className="text-base sm:text-lg">Create Your Magic</span>
                                     </div>
                                 </button>
                             </div>
@@ -345,12 +366,12 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                         {/* Right side - Before/After Comparison */}
                         <div className="space-y-8">
                             {/* Titles */}
-                            <div className="grid grid-cols-2 gap-8">
-                                <h3 className={`text-xl font-bold text-white/80 text-center transition-all duration-2000 delay-700 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
+                            <div className="grid grid-cols-2 gap-4 sm:gap-8">
+                                <h3 className={`text-lg sm:text-xl font-bold text-white/80 text-center transition-all duration-2000 delay-700 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
                                     }`}>
                                     Before
                                 </h3>
-                                <h3 className={`text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent text-center transition-all duration-2000 delay-900 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
+                                <h3 className={`text-lg sm:text-xl font-bold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent text-center transition-all duration-2000 delay-900 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
                                     }`}>
                                     After
                                 </h3>
@@ -358,7 +379,7 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
 
                             {/* Logo containers with centered arrow */}
                             <div className="relative">
-                                <div className="grid grid-cols-2 gap-8 items-center">
+                                <div className="grid grid-cols-2 gap-4 sm:gap-8 items-center">
                                     {/* Before Logo */}
                                     <div
                                         className={`flex justify-center transition-all duration-2000 delay-700 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
@@ -388,22 +409,22 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                             </div>
 
                             {/* Feature lists */}
-                            <div className="grid grid-cols-2 gap-8">
+                            <div className="grid grid-cols-2 gap-4 sm:gap-8">
                                 {/* Before features */}
                                 <div
                                     className={`space-y-2 transition-all duration-2000 delay-700 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 -translate-x-8'
                                         }`}
                                 >
-                                    <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-gray-400 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-gray-400 rounded-full" />
                                         <span>Static & Flat</span>
                                     </div>
-                                    <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-gray-400 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-gray-400 rounded-full" />
                                         <span>Limited Impact</span>
                                     </div>
-                                    <div className="flex items-center justify-center space-x-2 text-gray-400 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-gray-400 rounded-full" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-gray-400 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-gray-400 rounded-full" />
                                         <span>Forgettable</span>
                                     </div>
                                 </div>
@@ -413,16 +434,16 @@ const Hero3D: React.FC<Hero3DProps> = ({ headerContent, workflowContent }) => {
                                     className={`space-y-2 transition-all duration-2000 delay-900 ${isLoaded ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-8'
                                         }`}
                                 >
-                                    <div className="flex items-center justify-center space-x-2 text-purple-300 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-purple-400 rounded-full animate-pulse" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-purple-300 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-purple-400 rounded-full animate-pulse" />
                                         <span>Interactive & Alive</span>
                                     </div>
-                                    <div className="flex items-center justify-center space-x-2 text-pink-300 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-pink-400 rounded-full animate-pulse" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-pink-300 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-pink-400 rounded-full animate-pulse" />
                                         <span>Stunning Depth</span>
                                     </div>
-                                    <div className="flex items-center justify-center space-x-2 text-cyan-300 text-sm">
-                                        <div className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-pulse" />
+                                    <div className="flex items-center justify-center space-x-1 sm:space-x-2 text-cyan-300 text-xs sm:text-sm">
+                                        <div className="w-1 h-1 sm:w-1.5 sm:h-1.5 bg-cyan-400 rounded-full animate-pulse" />
                                         <span>Unforgettable</span>
                                     </div>
                                 </div>

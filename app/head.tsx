@@ -28,6 +28,13 @@ export default function Head() {
       <meta name="apple-mobile-web-app-capable" content="yes" />
       <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
       <link rel="canonical" href={appUrl} />
+      {/* Preload showcase images for instant swaps and best visual quality */}
+      <link rel="preload" as="image" href="/twitter_flat.png" type="image/png" />
+      <link rel="preload" as="image" href="/twitter_jelly.png" type="image/png" />
+      <link rel="preload" as="image" href="/apple_flat.png" type="image/png" />
+      <link rel="preload" as="image" href="/apple_jelly.png" type="image/png" />
+      <link rel="preload" as="image" href="/tesla_flat.png" type="image/png" />
+      <link rel="preload" as="image" href="/tesla_jelly.png" type="image/png" />
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(productJsonLd) }}
